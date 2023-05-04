@@ -1,32 +1,52 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import'./AddCourses.css'; // import your custom CSS file here
+import './AddCourses.css'; // import your custom CSS file here
+import { customAxios } from '../utils/customAxios';
 
 function AddCourses() {
-  const instructors = [
-    { id: 1, name: 'Instructor 1' },
-    { id: 2, name: 'Instructor 2' },
-    { id: 3, name: 'Instructor 3' },
-  ];
-
-
+  const [instructors, setInstructors] = useState([]);
   const [courseName, setCourseName] = useState('');
   const [courseLevel, setCourseLevel] = useState('');
   const [courseDescription, setCourseDescription] = useState('');
-  const [courseImage, setCourseImage] = useState('');
   const [lectures, setLectures] = useState('');
   const [instructorName, setInstructorName] = useState('');
   const [courseDate, setCourseDate] = useState('');
 
-  const handleAddCourse = () => {
-    console.log(courseName, courseLevel, courseDescription, courseImage, lectures,
-      instructorName,
-      courseDate);
-  };
+  useEffect(() => {
+    const fetchInstructors = async () => {
+      const data = await customAxios.get('/user/instructors');
+      if (data && data.data) {
+        setInstructors(data.data);
+      }
+    };
+    fetchInstructors();
+  }, []);
 
+  const handleAddCourse = async () => {
+    try {
+      const data = await customAxios.post('/course/',
+        {
+          name: courseName,
+          level: courseLevel,
+          description: courseDescription,
+          lectures: lectures,
+          instructor: instructorName,
+          date: courseDate,
+        })
+      if (data && data.data) {
+        alert('Course added successfully');
+        window.location.href = '/';
+      }
+    } catch (error) {
+      console.log(error);
+      if (error && error.response && error.response.data && error.response.data.message) {
+        alert(error.response.data.message);
+      }
+    }
+  };
   return (
     <Container className="mt-5">
       <Row>
@@ -68,14 +88,14 @@ function AddCourses() {
                     onChange={(e) => setCourseDescription(e.target.value)}
                   />
                 </Form.Group>
-                <Form.Group controlId="formBasicImage">
+                {/* <Form.Group controlId="formBasicImage">
                   <Form.Label>Image</Form.Label>
                   <Form.Control
                     type="file"
                     accept=".jpg, .jpeg, .png"
                     onChange={(e) => setCourseImage(e.target.value)}
                   />
-                </Form.Group>
+                </Form.Group> */}
                 <Form.Group controlId="formBasicLectures">
                   <Form.Label>Lectures</Form.Label>
                   <Form.Control
@@ -94,7 +114,7 @@ function AddCourses() {
                   >
                     <option value="">Select instructor name</option>
                     {instructors.map((instructor) => (
-                      <option value={instructor.name} key={instructor.id}>
+                      <option value={instructor._id} key={instructor.id}>
                         {instructor.name}
                       </option>
                     ))}

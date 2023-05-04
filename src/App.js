@@ -9,24 +9,45 @@ import Courses from './pages/Courses';
 import AddCourses from './pages/AddCourses';
 import MainNavigation from "./components/layout/MainNavigation"
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AdminRoutes from './components/layout/AdminRoutes';
+import ProtectedRoutes from './components/layout/ProtectedRoutes';
 
 function App() {
-  const [courses, setCourses] = useState([]);
-  const handleAddCourses = (newCourse) => {
-    setCourses([...courses, newCourse]);
-  };
   return (
     <div>
       <MainNavigation />
       <Routes>
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
-        <Route path='/' element={<Lectures />} />
-        <Route path='/add-lectures' element={<AddLectures courses={courses} />} />
-        <Route path='/courses' element={<Courses courses={courses} />} />
-        <Route path='/add-courses' element={<AddCourses handleAddCourses={handleAddCourses} />} />
+        <Route path='/lectures' element={
+          <ProtectedRoutes>
+            <Lectures />
+          </ProtectedRoutes>
+        }
+        />
+        <Route path='/add-lectures' element={
+          <ProtectedRoutes>
+            <AdminRoutes>
+              <AddLectures />
+            </AdminRoutes>
+          </ProtectedRoutes>
+        } />
+        <Route path='/' element={
+          <ProtectedRoutes>
+            <AdminRoutes>
+              <Courses />
+            </AdminRoutes>
+          </ProtectedRoutes>
+        } />
+        <Route path='/add-courses' element={
+          <ProtectedRoutes>
+            <AdminRoutes>
+              <AddCourses />
+            </AdminRoutes>
+          </ProtectedRoutes>
+        } />
       </Routes>
-    </div>
+    </div >
   );
 }
 

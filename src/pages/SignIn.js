@@ -16,6 +16,10 @@ const SignInPage = () => {
     if (data && data.data && data.data.access_token) {
       localStorage.setItem('token', data.data.access_token);
       localStorage.setItem('user', JSON.stringify(data.data.user));
+      alert('Login success');
+      window.location.href = '/';
+    } else {
+      alert('Login failed');
     }
   };
 

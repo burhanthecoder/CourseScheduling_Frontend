@@ -8,10 +8,8 @@ function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState('');
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // console.log(name, email, password, confirmPassword, role);
     const data = await customAxios.post(
       '/user/register', {
       name,
@@ -22,6 +20,9 @@ function SignUp() {
     if (data && data.data && data.data.access_token) {
       localStorage.setItem('token', data.data.access_token);
       localStorage.setItem('user', JSON.stringify(data.data.user));
+      alert('Sign Up success');
+    } else {
+      alert('Sign Up failed');
     }
   };
 
