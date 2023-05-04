@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import './SignIn.module.css';
-
+import { customAxios } from '../utils/customAxios';
 const SignInPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Email:', email);
-    console.log('Password:', password);
+    const data = await customAxios.post(
+      '/user/login', {
+      email,
+      password,
+    });
+    if (data && data.data && data.data.access_token) {
+      localStorage.setItem('token', data.data.access_token);
+      localStorage.setItem('user', JSON.stringify(data.data.user));
+    }
   };
 
   return (

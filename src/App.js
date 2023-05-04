@@ -12,18 +12,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [courses, setCourses] = useState([]);
-
   const handleAddCourses = (newCourse) => {
     setCourses([...courses, newCourse]);
   };
-
   return (
     <div>
       <MainNavigation />
       <Routes>
-        <Route path="/" element={<SignUp />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
-        <Route path='/lectures' element={<Lectures />} />
+        <Route path='/' element={<Lectures />} />
         <Route path='/add-lectures' element={<AddLectures courses={courses} />} />
         <Route path='/courses' element={<Courses courses={courses} />} />
         <Route path='/add-courses' element={<AddCourses handleAddCourses={handleAddCourses} />} />
